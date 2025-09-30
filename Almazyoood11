@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الفريق الإعلامي لفرقة المزيود</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --apple-light-bg: #f5f5f7;
+            --apple-card-bg: rgba(255, 255, 255, 0.8);
+            --apple-border-color: rgba(0, 0, 0, 0.1);
+            --apple-blue: #0071e3;
+            --apple-blue-hover: #0077ed;
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+        }
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--apple-light-bg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .animate-apple-fade-in {
+            animation: appleFadeIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes appleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .apple-card {
+            background-color: var(--apple-card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--apple-border-color);
+            transition: all 0.4s ease;
+        }
+        .apple-card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .apple-button {
+            background-color: var(--apple-blue);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .apple-button:hover {
+            background-color: var(--apple-blue-hover);
+            transform: scale(1.05);
+        }
+        .size-btn {
+            transition: all 0.3s ease;
+            border: 1px solid var(--apple-border-color);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        .size-btn.selected {
+            background-color: var(--apple-blue);
+            border-color: var(--apple-blue);
+            color: white;
+            transform: scale(1.05);
+        }
+        .loader {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-gray-800 selection:bg-blue-500 selection:text-white">
+
+    <div class="container mx-auto px-6 py-12 min-h-screen flex flex-col items-center justify-center">
+
+        <!-- Section 1: Landing -->
+        <div id="landing-section" class="text-center animate-apple-fade-in mb-16">
+            <img id="logo" src="https://i.ibb.co/ch9FdbXP/IMG-1086.png" alt="شعار فرقة المزيود" class="mx-auto mb-8 h-32 w-32 md:h-36 md:w-36">
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tighter text-gray-900">
+                فرقة المزيود
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto">
+                الموقع الرسمي للفريق الإعلامي. ترقبوا المميزات الجديدة قريباً.
+            </p>
+        </div>
+
+        <!-- Section 2: Image Cover Generator -->
+        <div class="w-full max-w-2xl apple-card rounded-3xl p-8 md:p-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-900">صانع الكفرات</h2>
+            
+            <div class="mb-8 text-center">
+                <p class="text-lg font-semibold mb-4 text-gray-700">الخطوة 1: اختر المقاس</p>
+                <div class="flex justify-center gap-4">
+                    <button id="size-square" class="size-btn selected text-white font-semibold py-2 px-8 rounded-full">
+                        مربع
+                    </button>
+                    <button id="size-story" class="size-btn text-gray-700 font-semibold py-2 px-8 rounded-full">
+                        ستوري
+                    </button>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <p class="text-lg font-semibold mb-4 text-gray-700">الخطوة 2: ارفع صورتك</p>
+                <label for="photo-upload" class="cursor-pointer apple-button text-white font-semibold py-3 px-10 rounded-full inline-block transform">
+                    <span id="upload-text">اختر صورة</span>
+                </label>
+                <input type="file" id="photo-upload" class="hidden" accept="image/jpeg, image/png, image/webp">
+                <p id="photo-filename" class="text-sm text-gray-500 mt-3 h-5 truncate"></p>
+            </div>
+
+            <!-- NEW: Step 3 for adding text -->
+            <div class="text-center mb-8">
+                <p class="text-lg font-semibold mb-4 text-gray-700">الخطوة 3 (اختياري): أضف نصاً</p>
+                <input type="text" id="custom-text" placeholder="اكتب كلمتين بحد أقصى" class="w-full max-w-xs mx-auto text-center bg-gray-200 border border-gray-300 rounded-full py-3 px-5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+            </div>
+            
+            <div id="result-area" class="hidden text-center">
+                <div id="loader" class="loader mx-auto my-4 hidden"></div>
+                <canvas id="canvas" class="mx-auto rounded-xl shadow-lg bg-gray-100 max-w-full" style="display: none;"></canvas>
+                <a id="download-btn" class="hidden mt-8 apple-button text-white font-semibold py-3 px-10 rounded-full transform">
+                    تحميل الصورة
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Elements ---
+        const photoUpload = document.getElementById('photo-upload');
+        const uploadLabel = document.querySelector('label[for="photo-upload"]');
+        const uploadText = document.getElementById('upload-text');
+        const photoFilename = document.getElementById('photo-filename');
+        const customTextInput = document.getElementById('custom-text'); // New text input
+        const resultArea = document.getElementById('result-area');
+        const loader = document.getElementById('loader');
+        const canvas = document.getElementById('canvas');
+        const downloadBtn = document.getElementById('download-btn');
+        const sizeSquareBtn = document.getElementById('size-square');
+        const sizeStoryBtn = document.getElementById('size-story');
+        const ctx = canvas.getContext('2d');
+        
+        let photoFile = null;
+        let selectedSize = 'square';
+
+        // --- Loading theme from external URL ---
+        const themeImg = new Image();
+        themeImg.crossOrigin = "anonymous"; 
+
+        themeImg.onload = function() {
+            console.log("Theme loaded successfully. Uploader is active.");
+            uploadLabel.classList.remove('opacity-50', 'cursor-not-allowed');
+            uploadText.textContent = "اختر صورة";
+            photoUpload.disabled = false;
+        };
+
+        themeImg.onerror = function() {
+            console.error("Failed to load theme image from URL.");
+            alert("حدث خطأ في تحميل موارد التصميم. يرجى التأكد من اتصالك بالإنترنت وإعادة تحميل الصفحة.");
+        };
+        
+        uploadLabel.classList.add('opacity-50', 'cursor-not-allowed');
+        uploadText.textContent = "جاري التحميل...";
+        photoUpload.disabled = true;
+
+        themeImg.src = "https://i.ibb.co/mrr52k05/IMG-1083.png";
+
+
+        // --- Event Listeners ---
+
+        sizeSquareBtn.addEventListener('click', () => selectSize('square'));
+        sizeStoryBtn.addEventListener('click', () => selectSize('story'));
+
+        function selectSize(size) {
+            selectedSize = size;
+            sizeSquareBtn.classList.toggle('selected', size === 'square');
+            sizeSquareBtn.classList.toggle('text-white', size === 'square');
+            sizeSquareBtn.classList.toggle('text-gray-700', size !== 'square');
+
+            sizeStoryBtn.classList.toggle('selected', size !== 'square');
+            sizeStoryBtn.classList.toggle('text-white', size !== 'square');
+            sizeStoryBtn.classList.toggle('text-gray-700', size === 'square');
+
+            if (photoFile) generateImage();
+        }
+
+        photoUpload.addEventListener('change', (e) => {
+            photoFile = e.target.files[0];
+            if (photoFile) {
+                photoFilename.textContent = photoFile.name;
+                generateImage();
+            }
+        });
+
+        // Add event listener for the text input for real-time updates
+        customTextInput.addEventListener('input', () => {
+            if (photoFile) {
+                generateImage();
+            }
+        });
+        
+        downloadBtn.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `mazood-cover-${selectedSize}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+
+        // --- Core Functions ---
+
+        async function generateImage() {
+            if (!photoFile) {
+                alert("الرجاء اختيار صورة أولاً.");
+                return;
+            }
+            if (!themeImg.complete || themeImg.naturalWidth === 0) {
+                alert("موارد التصميم لم تحمل بعد، يرجى الانتظار لحظة والمحاولة مرة أخرى.");
+                return;
+            }
+
+            resultArea.style.display = 'block';
+            loader.style.display = 'block';
+            canvas.style.display = 'none';
+            downloadBtn.style.display = 'none';
+
+            try {
+                const userImg = await createImageFromFile(photoFile);
+
+                canvas.width = (selectedSize === 'story') ? 1080 : 1080;
+                canvas.height = (selectedSize === 'story') ? 1920 : 1080;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Step 1: Draw the user's image
+                drawCoverImage(ctx, userImg);
+                
+                // Step 2: Apply a semi-transparent black overlay
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Step 3: Draw the custom text
+                drawCustomText(ctx);
+
+                // Step 4: Draw the theme on top
+                if (selectedSize === 'story') {
+                    const themeSize = canvas.width;
+                    const yOffset = (canvas.height - themeSize) / 2;
+                    ctx.drawImage(themeImg, 0, yOffset, themeSize, themeSize);
+                } else {
+                    ctx.drawImage(themeImg, 0, 0, canvas.width, canvas.height);
+                }
+                
+                loader.style.display = 'none';
+                canvas.style.display = 'block';
+                downloadBtn.style.display = 'inline-block';
+
+            } catch (error) {
+                console.error("Error generating image:", error);
+                alert("حدث خطأ أثناء إنشاء الصورة. يرجى التأكد من أن الملف سليم والمحاولة مرة أخرى.");
+                loader.style.display = 'none';
+            }
+        }
+
+        function drawCustomText(ctx) {
+            const text = customTextInput.value.trim();
+            if (!text) return;
+
+            const lines = text.split(' ').filter(Boolean).slice(0, 2); // Take max 2 words
+            if (lines.length === 0) return;
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxWidth = canvas.width * 0.65; // Safe area for text is 65% of width
+
+            // --- Text Style ---
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            // تم إزالة الظل من هنا
+
+            // --- Dynamic Font Sizing ---
+            let fontSize = 220;
+            let longestLine = lines.length > 1 ? (lines[0].length > lines[1].length ? lines[0] : lines[1]) : lines[0];
+            
+            do {
+                ctx.font = `900 ${fontSize}px 'IBM Plex Sans Arabic'`;
+                if (ctx.measureText(longestLine).width < maxWidth) break;
+                fontSize -= 10;
+            } while (fontSize > 40);
+
+            // --- Drawing Text ---
+            const lineHeight = fontSize;
+            if (lines.length === 1) {
+                ctx.fillText(lines[0], centerX, centerY);
+            } else {
+                const y1 = centerY - (lineHeight / 1.9);
+                const y2 = centerY + (lineHeight / 1.9);
+                ctx.fillText(lines[0], centerX, y1);
+                ctx.fillText(lines[1], centerX, y2);
+            }
+
+            // --- Reset Shadow for subsequent drawings ---
+            ctx.shadowColor = 'transparent';
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetY = 0;
+        }
+        
+        function drawCoverImage(ctx, img) {
+            const canvas = ctx.canvas;
+            const canvasAspect = canvas.width / canvas.height;
+            const imgAspect = img.width / img.height;
+            let sx, sy, sWidth, sHeight;
+
+            if (imgAspect > canvasAspect) {
+                sHeight = img.height;
+                sWidth = sHeight * canvasAspect;
+                sx = (img.width - sWidth) / 2;
+                sy = 0;
+            } else {
+                sWidth = img.width;
+                sHeight = sWidth / canvasAspect;
+                sx = 0;
+                sy = (img.height - sHeight) / 2;
+            }
+            ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, canvas.width, canvas.height);
+        }
+
+        function createImageFromFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
